@@ -1,12 +1,13 @@
 use std::error::Error;
 
-use axum::Router;
+use lighthouse::create_base_router;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv()?;
     let ip_address_port = dotenvy::var("IP_ADDRESS_PORT")?;
-    let app = Router::new().route("/", axum::routing::get(|| async { "Hello World" }));
+    let base_router = create_base_router();
+    let app = base_router.route("/api", axum::routing::get(|| async { "Hello World" }));
     let server =
         axum::Server::bind(&ip_address_port.parse().unwrap()).serve(app.into_make_service());
     server
