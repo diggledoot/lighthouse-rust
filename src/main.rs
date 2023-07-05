@@ -4,9 +4,11 @@ use axum::Router;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    dotenvy::dotenv()?;
+    let ip_address_port = dotenvy::var("IP_ADDRESS_PORT")?;
     let app = Router::new().route("/", axum::routing::get(|| async { "Hello World" }));
     let server =
-        axum::Server::bind(&"127.0.0.1:3000".parse().unwrap()).serve(app.into_make_service());
+        axum::Server::bind(&ip_address_port.parse().unwrap()).serve(app.into_make_service());
     server
         .with_graceful_shutdown(shutdown_signal())
         .await
