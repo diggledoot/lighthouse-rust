@@ -11,6 +11,7 @@ dotenvy = "0.15.7"
 hyper = { version = "0.14.27", features = ["full"] }
 tokio = { version = "1.29.1", features = ["full"] }
 tower = { version = "0.4.13", features = ["full"] }
+orm = { path = "./orm" }
 
-[worspace]
-members=["orm"]
+[workspace]
+members = ["orm"]
