@@ -1,16 +1,18 @@
-pub mod post_handlers;
+pub mod post_handler;
 pub mod post_router;
 
 use self::post_router::base_router;
 use axum::{
-    routing::{get, post},
+    routing::{delete, get, post, put},
     Router,
 };
-use post_handlers::*;
+use post_handler::*;
 
 pub fn post_router() -> Router {
     let post_routes = Router::new()
-        .route("/create", post(create_post))
-        .route("/:id", get(get_post));
+        .route("/", post(create_post))
+        .route("/:id", get(get_post_by_id))
+        .route("/:id", put(update_post_by_id))
+        .route("/:id", delete(delete_post_by_id));
     base_router(post_routes)
 }
