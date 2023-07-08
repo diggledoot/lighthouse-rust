@@ -1,1 +1,2 @@
-Okay. Now work on implementing service for the database actions. CRUD. fetch all. etc etc for post object
+finished CRUD/
+work on the service with the sea-orm stuff y'know
