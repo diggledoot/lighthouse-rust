@@ -6,6 +6,7 @@ use sea_orm_migration::MigratorTrait;
 
 pub mod entities;
 pub mod migrator;
+pub use sea_orm;
 
 pub async fn make_migration_refresh(db_url: &str) -> Result<(), Box<dyn Error>> {
     let db = Database::connect(db_url).await?;
