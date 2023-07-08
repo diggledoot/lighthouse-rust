@@ -16,7 +16,7 @@ async fn fallback(uri: Uri) -> (StatusCode, String) {
 }
 
 pub async fn database_migration(db_url: &str) -> Result<(), Box<dyn Error>> {
-    make_migration(db_url).await?;
+    make_migration_refresh(db_url).await?;
     Ok(())
 }
 
