@@ -6,7 +6,9 @@ use orm::*;
 use std::error::Error;
 
 pub fn create_base_router() -> Router {
-    Router::new().fallback(fallback)
+    Router::new()
+        .nest("/api", post::post_router())
+        .fallback(fallback)
 }
 
 async fn fallback(uri: Uri) -> (StatusCode, String) {
