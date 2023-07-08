@@ -1,17 +1,10 @@
-mod post;
+pub mod post;
 
-use axum::Router;
 use hyper::{StatusCode, Uri};
 use orm::*;
 use std::error::Error;
 
-pub fn create_base_router() -> Router {
-    Router::new()
-        .nest("/api", post::post_router())
-        .fallback(fallback)
-}
-
-async fn fallback(uri: Uri) -> (StatusCode, String) {
+pub async fn fallback(uri: Uri) -> (StatusCode, String) {
     (StatusCode::NOT_FOUND, format!("No route for {uri}"))
 }
 
