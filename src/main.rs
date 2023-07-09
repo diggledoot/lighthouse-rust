@@ -11,7 +11,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     orm::make_migration_refresh(&db_url).await?;
 
-    let app_routes = Router::new().nest("/post", post::post_router());
+    let app_routes = Router::new().nest("/post", post::routes());
     let app = Router::new().nest("/api", app_routes).fallback(fallback);
 
     let server =

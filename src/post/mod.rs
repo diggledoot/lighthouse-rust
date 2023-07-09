@@ -6,7 +6,7 @@ use axum::{
 };
 use post_handler::*;
 
-pub fn post_router() -> Router {
+pub fn routes() -> Router {
     Router::new()
         .route("/", post(create_post))
         .route("/:id", get(get_post_by_id))
