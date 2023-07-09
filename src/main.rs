@@ -1,7 +1,7 @@
 use std::error::Error;
 
 use axum::Router;
-use lighthouse::{database_migration, fallback, post, shutdown_signal};
+use lighthouse::{fallback, post, shutdown_signal};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -9,7 +9,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let db_url = dotenvy::var("DATABASE_URL")?;
     let ip_address_port = dotenvy::var("IP_ADDRESS_PORT")?;
 
-    database_migration(&db_url).await?;
+    orm::make_migration_refresh(&db_url).await?;
 
     let app_routes = Router::new().nest("/post", post::post_router());
     let app = Router::new().nest("/api", app_routes).fallback(fallback);

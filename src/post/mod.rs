@@ -1,5 +1,4 @@
 pub mod post_handler;
-pub mod post_router;
 
 use axum::{
     routing::{delete, get, post, put},

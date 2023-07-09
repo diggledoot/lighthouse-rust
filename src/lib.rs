@@ -1,16 +1,9 @@
 pub mod post;
 
 use hyper::{StatusCode, Uri};
-use orm::*;
-use std::error::Error;
 
 pub async fn fallback(uri: Uri) -> (StatusCode, String) {
     (StatusCode::NOT_FOUND, format!("No route for {uri}"))
-}
-
-pub async fn database_migration(db_url: &str) -> Result<(), Box<dyn Error>> {
-    make_migration_refresh(db_url).await?;
-    Ok(())
 }
 
 pub async fn shutdown_signal() {
