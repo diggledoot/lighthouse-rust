@@ -1,2 +1,2 @@
-finished CRUD/
-work on the service with the sea-orm stuff y'know
+okay able to pass the db state around the handlers ughhh.
+okay to do create post function. just interacting with the db.
