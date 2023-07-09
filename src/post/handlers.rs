@@ -1,7 +1,9 @@
 use axum::{
     extract::{Path, State},
+    response::IntoResponse,
     Json,
 };
+
 use orm::{
     entities::post,
     sea_orm::{ActiveModelTrait, ConnectionTrait},
@@ -11,18 +13,19 @@ use crate::app_state::AppState;
 
 pub async fn create_post(
     State(_state): State<AppState>,
-    Json(payload): Json<post::Model>,
-) -> String {
+    Json(post): Json<post::Model>,
+) -> impl IntoResponse {
     let db = &_state.conn;
-    let _ = post::ActiveModel {
-        post_title: orm::sea_orm::ActiveValue::Set(payload.post_title.clone()),
-        post_content: orm::sea_orm::ActiveValue::Set(payload.post_content.clone()),
+    let post_active_model = post::ActiveModel {
+        post_title: orm::sea_orm::ActiveValue::Set(post.post_title.clone()),
+        post_content: orm::sea_orm::ActiveValue::Set(post.post_content.clone()),
         ..Default::default()
-    }
-    .save(db)
-    .await
-    .map_err(|err| format!("{:?}", err));
-    format!("create post with the following json {:?}", payload)
+    };
+    let res = post_active_model.insert(db).await;
+    let Ok(db_post) = res else{
+        return Json(None);
+    };
+    Json(Some(db_post))
 }
 
 pub async fn get_post_by_id(Path(id): Path<u32>, State(_state): State<AppState>) -> String {

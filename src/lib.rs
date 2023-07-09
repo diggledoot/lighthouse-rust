@@ -1,5 +1,6 @@
 pub mod app_state;
 pub mod post;
+pub mod utilities;
 
 use hyper::{StatusCode, Uri};
 
