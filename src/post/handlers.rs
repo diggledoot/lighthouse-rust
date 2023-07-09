@@ -2,11 +2,26 @@ use axum::{
     extract::{Path, State},
     Json,
 };
-use orm::{entities::post, sea_orm::ConnectionTrait};
+use orm::{
+    entities::post,
+    sea_orm::{ActiveModelTrait, ConnectionTrait},
+};
 
 use crate::app_state::AppState;
 
-pub async fn create_post(Json(payload): Json<post::Model>) -> String {
+pub async fn create_post(
+    State(_state): State<AppState>,
+    Json(payload): Json<post::Model>,
+) -> String {
+    let db = &_state.conn;
+    let _ = post::ActiveModel {
+        post_title: orm::sea_orm::ActiveValue::Set(payload.post_title.clone()),
+        post_content: orm::sea_orm::ActiveValue::Set(payload.post_content.clone()),
+        ..Default::default()
+    }
+    .save(db)
+    .await
+    .map_err(|err| format!("{:?}", err));
     format!("create post with the following json {:?}", payload)
 }
 
