@@ -6,7 +6,8 @@ use axum::{
 
 use orm::{
     entities::post,
-    sea_orm::{ActiveModelTrait, ConnectionTrait},
+    sea_orm::{ActiveModelTrait, EntityTrait},
+    entities::prelude::Post
 };
 
 use crate::app_state::AppState;
@@ -28,12 +29,13 @@ pub async fn create_post(
     Json(Some(db_post))
 }
 
-pub async fn get_post_by_id(Path(id): Path<u32>, State(_state): State<AppState>) -> String {
-    format!(
-        "get on post with an id of {} and using the backend {:?}",
-        id,
-        _state.conn.get_database_backend()
-    )
+pub async fn get_post_by_id(Path(id): Path<u32>, State(_state): State<AppState>) -> impl IntoResponse {
+    let db = &_state.conn;
+    let retrieved_post = Post::find_by_id(id as i32).one(db).await;
+    let Ok(post) = retrieved_post else{
+        return Json(None);
+    };
+    Json(Some(post))
 }
 
 pub async fn update_post_by_id(Path(id): Path<u32>, Json(payload): Json<post::Model>) -> String {
