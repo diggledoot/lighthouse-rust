@@ -1,11 +1,9 @@
-mod app_state;
 
 use axum::{
     routing::{delete, get, post, put},
     Router,
 };
-use lighthouse::app_state::AppState;
-use lighthouse::{fallback, post, shutdown_signal};
+use lighthouse::{fallback, post, shutdown_signal, utilities::app_state::AppState};
 use orm::sea_orm::Database;
 use post::handlers::*;
 use std::error::Error;
