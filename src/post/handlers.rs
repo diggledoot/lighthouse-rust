@@ -4,6 +4,7 @@ use axum::{
     Json,
 };
 
+use hyper::StatusCode;
 use orm::{
     entities::post,
     sea_orm::{ActiveModelTrait, EntityTrait},
@@ -24,18 +25,21 @@ pub async fn create_post(
     };
     let res = post_active_model.insert(db).await;
     let Ok(db_post) = res else{
-        return Json(None);
+        return (StatusCode::NOT_FOUND,Json(None));
     };
-    Json(Some(db_post))
+    (StatusCode::OK,Json(Some(db_post)))
 }
 
 pub async fn get_post_by_id(Path(id): Path<u32>, State(_state): State<AppState>) -> impl IntoResponse {
     let db = &_state.conn;
-    let retrieved_post = Post::find_by_id(id as i32).one(db).await;
-    let Ok(post) = retrieved_post else{
-        return Json(None);
+    let res = Post::find_by_id(id as i32).one(db).await;
+    let Ok(optional_post) = res else{
+        return (StatusCode::NOT_FOUND,Json(None));
     };
-    Json(Some(post))
+    let Some(post) = optional_post else{
+        return (StatusCode::NOT_FOUND,Json(None));
+    };
+    (StatusCode::OK,Json(Some(post)))
 }
 
 pub async fn update_post_by_id(Path(id): Path<u32>, Json(payload): Json<post::Model>) -> String {
