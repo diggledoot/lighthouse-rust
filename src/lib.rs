@@ -1,21 +1,13 @@
-mod post;
+pub mod post;
+pub mod utilities;
 
-use axum::Router;
-use hyper::{StatusCode, Uri};
-use orm::*;
 use std::error::Error;
 
-pub fn create_base_router() -> Router {
-    Router::new().fallback(fallback)
-}
+use axum::{routing::{IntoMakeService, get}, Router};
+use hyper::{StatusCode, Uri, Server, server::conn::AddrIncoming};
 
-async fn fallback(uri: Uri) -> (StatusCode, String) {
+pub async fn fallback(uri: Uri) -> (StatusCode, String) {
     (StatusCode::NOT_FOUND, format!("No route for {uri}"))
-}
-
-pub async fn database_migration(db_url: &str) -> Result<(), Box<dyn Error>> {
-    make_migration(db_url).await?;
-    Ok(())
 }
 
 pub async fn shutdown_signal() {
@@ -23,4 +15,8 @@ pub async fn shutdown_signal() {
         .await
         .expect("failed to install CTRL+C signal handler");
     println!("Gracefully shutting down~");
+}
+
+pub fn run()->Result<Server<AddrIncoming,IntoMakeService<Router>>,Box<dyn Error>>{
+    todo!("Move the run logic here for slim main")
 }

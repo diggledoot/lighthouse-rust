@@ -22,6 +22,8 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
+                    .col(ColumnDef::new(Post::PostTitle).string().not_null())
+                    .col(ColumnDef::new(Post::PostContent).string())
                     .to_owned(),
             )
             .await
@@ -37,4 +39,6 @@ impl MigrationTrait for Migration {
 pub enum Post {
     Table,
     Id,
+    PostTitle,
+    PostContent,
 }
